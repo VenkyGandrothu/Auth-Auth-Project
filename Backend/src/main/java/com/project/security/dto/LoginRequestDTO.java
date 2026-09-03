@@ -1,6 +1,7 @@
 package com.project.security.dto;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,9 +12,9 @@ import lombok.Setter;
 public class LoginRequestDTO {
     
     @Email
-    @NotEmpty
+    @NotBlank
     private String email;
-    @NotEmpty
+    @NotBlank
     private String password;
 
 }

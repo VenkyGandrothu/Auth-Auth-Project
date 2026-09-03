@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.project.security.dto.LoginRequestDTO;
+import com.project.security.dto.LoginResponseDTO;
 import com.project.security.dto.SignupRequestDTO;
 import com.project.security.entity.User;
 import com.project.security.repo.UserRepo;
@@ -30,7 +31,7 @@ public class AuthService {
 
     public User saveUser(SignupRequestDTO signupRequestDTO){
 
-        String email = signupRequestDTO.getEmail();
+        String email = signupRequestDTO.getEmail().trim().toLowerCase();
 
         Optional<User> findUser = userRepo.findByEmail(email);
 
@@ -50,8 +51,9 @@ public class AuthService {
         return userRepo.save(user);
     }
 
-    public User loginUser(LoginRequestDTO loginRequestDTO) {
-        User user = userRepo.findByEmail(loginRequestDTO.getEmail())
+    public LoginResponseDTO loginUser(LoginRequestDTO loginRequestDTO) {
+        String email = loginRequestDTO.getEmail().trim().toLowerCase();
+        User user = userRepo.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.UNAUTHORIZED, "Invalid email or password"));
     
@@ -59,7 +61,10 @@ public class AuthService {
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
-    
-        return user;
+        LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
+        loginResponseDTO.setId(user.getId());
+        loginResponseDTO.setUsername(user.getUsername());
+        loginResponseDTO.setEmail(user.getEmail());
+        return loginResponseDTO;
     }
 }
