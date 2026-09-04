@@ -2,6 +2,7 @@ package com.project.security.entity;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,6 +32,7 @@ public class User {
 	private String username;
 	@Email
 	@NotBlank
+	@Column(unique = true)
 	private String email;
 	@NotBlank
 	private String password;

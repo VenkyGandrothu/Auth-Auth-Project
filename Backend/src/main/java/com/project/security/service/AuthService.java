@@ -24,16 +24,18 @@ import jakarta.transaction.Transactional;
 public class AuthService {
 
     private final UserRepo userRepo;
-    private final PasswordEncoder passwordEncoder; // used in saveUser
+    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     public AuthService(
             UserRepo userRepo,
             PasswordEncoder passwordEncoder,
-            AuthenticationManager authenticationManager) {
+            AuthenticationManager authenticationManager, JwtService jwtService) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     public User saveUser(SignupRequestDTO signupRequestDTO) {
@@ -75,11 +77,12 @@ public class AuthService {
         User user = userRepo.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.UNAUTHORIZED, "Invalid email or password"));
-
+        String token = jwtService.generateToken(email);
         LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
         loginResponseDTO.setId(user.getId());
         loginResponseDTO.setUsername(user.getUsername());
         loginResponseDTO.setEmail(user.getEmail());
+        loginResponseDTO.setToken(token);
         return loginResponseDTO;
     }
 }
