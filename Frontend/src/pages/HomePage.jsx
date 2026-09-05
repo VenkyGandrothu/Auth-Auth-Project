@@ -5,7 +5,7 @@ import { useAuth } from "../auth/AuthContext.jsx";
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { token, user, logout } = useAuth();
+  const { token, logout } = useAuth();
   const [message, setMessage] = useState("Loading your workspace...");
   const [error, setError] = useState("");
 
@@ -49,24 +49,6 @@ export default function HomePage() {
       <main className="home-main">
         <p className="eyebrow">Protected route</p>
         <h1>{message}</h1>
-        <p className="home-copy">
-          You reached this page with a valid JWT. The backend verified your
-          Bearer token before returning the welcome message.
-        </p>
-
-        {user ? (
-          <dl className="user-meta">
-            <div>
-              <dt>Username</dt>
-              <dd>{user.username}</dd>
-            </div>
-            <div>
-              <dt>Email</dt>
-              <dd>{user.email}</dd>
-            </div>
-          </dl>
-        ) : null}
-
         {error ? <p className="form-error">{error}</p> : null}
       </main>
     </div>
