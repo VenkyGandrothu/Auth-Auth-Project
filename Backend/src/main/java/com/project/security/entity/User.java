@@ -39,8 +39,8 @@ public class User {
 	@NotEmpty
 	private String role;
 	private String status;
-	@NotEmpty
+	@NotNull 
 	private LocalDateTime createdAt;
-	@NotEmpty
+	@NotNull 
 	private LocalDateTime updatedAt;
 }

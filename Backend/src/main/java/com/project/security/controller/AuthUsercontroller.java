@@ -15,7 +15,7 @@ import com.project.security.service.AuthService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("api/V1/user")
+@RequestMapping("api/v1/auth")
 public class AuthUsercontroller {
     
 
