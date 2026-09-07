@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,7 +32,9 @@ public class AuthService {
     public AuthService(
             UserRepo userRepo,
             PasswordEncoder passwordEncoder,
-            AuthenticationManager authenticationManager, JwtService jwtService) {
+            AuthenticationManager authenticationManager,
+            JwtService jwtService
+    ) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
@@ -52,7 +55,7 @@ public class AuthService {
         user.setUsername(signupRequestDTO.getUsername());
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(signupRequestDTO.getPassword()));
-        user.setRole("User");
+        user.setRole("USER");
         user.setStatus("ACTIVE");
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
@@ -62,6 +65,15 @@ public class AuthService {
     public LoginResponseDTO loginUser(LoginRequestDTO loginRequestDTO) {
         String email = loginRequestDTO.getEmail().trim().toLowerCase();
 
+        User user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED, "Invalid email or password"));
+
+        if (!"ACTIVE".equalsIgnoreCase(user.getStatus())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Account is not active");
+        }
+
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -69,14 +81,14 @@ public class AuthService {
                             loginRequestDTO.getPassword()
                     )
             );
+        } catch (DisabledException ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Account is not active");
         } catch (AuthenticationException ex) {
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
 
-        User user = userRepo.findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.UNAUTHORIZED, "Invalid email or password"));
         String token = jwtService.generateToken(email);
         LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
         loginResponseDTO.setId(user.getId());

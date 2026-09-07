@@ -1,15 +1,21 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login } from "../api/authApi.js";
 import { useAuth } from "../auth/AuthContext.jsx";
 import AuthShell from "../components/AuthShell.jsx";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { saveAuth } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success] = useState(
+    location.state?.justSignedUp
+      ? "Account created — please sign in"
+      : ""
+  );
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event) {
@@ -57,6 +63,7 @@ export default function LoginPage() {
           />
         </label>
 
+        {success ? <p className="form-success">{success}</p> : null}
         {error ? <p className="form-error">{error}</p> : null}
 
         <button className="btn-primary" type="submit" disabled={loading}>

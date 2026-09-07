@@ -54,3 +54,12 @@ export function getHome(token) {
     },
   });
 }
+
+export function getMe(token) {
+  return request("/api/v1/user/me", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}

@@ -16,25 +16,23 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/v1/auth")
-public class AuthUsercontroller {
-    
+public class AuthController {
 
     private final AuthService authService;
 
-    public AuthUsercontroller(AuthService authService){
+    public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequestDTO signupRequestDTO){
+    public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequestDTO signupRequestDTO) {
         authService.saveUser(signupRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO){
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
         LoginResponseDTO response = authService.loginUser(loginRequestDTO);
         return ResponseEntity.ok(response);
-    } 
-    
+    }
 }
