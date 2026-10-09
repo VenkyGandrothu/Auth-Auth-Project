@@ -4,6 +4,7 @@ import { homePathForRole, normalizeRole } from "./auth/roles.js";
 import AdminPage from "./pages/AdminPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+import OAuthCallbackPage from "./pages/OAuthCallbackPage.jsx";
 import SignupPage from "./pages/SignupPage.jsx";
 
 function AccessCheck() {
@@ -74,6 +75,7 @@ export default function App() {
           </PublicOnlyRoute>
         }
       />
+      <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
       <Route
         path="/home"
         element={

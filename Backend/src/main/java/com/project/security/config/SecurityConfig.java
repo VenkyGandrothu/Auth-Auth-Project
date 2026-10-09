@@ -20,9 +20,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter, OAuth2SuccessHandler oAuth2SuccessHandler) {
         this.jwtAuthFilter = jwtAuthFilter;
+        this.oAuth2SuccessHandler = oAuth2SuccessHandler;
     }
 
     @Bean
@@ -32,17 +34,20 @@ public class SecurityConfig {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
-            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/api/v1/auth/signup",
-                    "/api/v1/auth/login"
+                    "/api/v1/auth/login",
+                    "/oauth2/authorization/**",
+                    "/login/oauth2/**"
                 ).permitAll()
                 .requestMatchers("/api/v1/user/me").hasAnyRole("USER","ADMIN")
                 .requestMatchers("/api/v1/user/**").hasRole("USER")
                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
+            .oauth2Login(oauth -> oauth.successHandler(oAuth2SuccessHandler))
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

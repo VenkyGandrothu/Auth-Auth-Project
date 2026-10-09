@@ -195,6 +195,37 @@ a:hover {
   background: rgba(255, 255, 255, 0.16);
 }
 
+.auth-divider {
+  margin: 1.2rem 0 0.8rem;
+  max-width: 26rem;
+  color: #6b7c72;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.btn-google {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 26rem;
+  width: 100%;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.btn-google:hover {
+  border-color: var(--moss);
+  text-decoration: none;
+}
+
 .auth-switch {
   margin: 1.4rem 0 0;
   color: #4a5c52;

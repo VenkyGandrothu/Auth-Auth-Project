@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signup } from "../api/authApi.js";
+import { googleLoginUrl, signup } from "../api/authApi.js";
 import AuthShell from "../components/AuthShell.jsx";
 
 export default function SignupPage() {
@@ -73,6 +73,11 @@ export default function SignupPage() {
           {loading ? "Creating..." : "Create account"}
         </button>
       </form>
+
+      <p className="auth-divider">or</p>
+      <a className="btn-google" href={googleLoginUrl}>
+        Sign up with Google
+      </a>
 
       <p className="auth-switch">
         Already registered? <Link to="/login">Sign in</Link>
