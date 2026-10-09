@@ -1,36 +1,36 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getHome, getMe } from "../api/authApi.js";
+import { getAdminHome, getMe } from "../api/authApi.js";
 import { useAuth } from "../auth/AuthContext.jsx";
 
-export default function HomePage() {
+export default function AdminPage() {
   const navigate = useNavigate();
   const { token, logout } = useAuth();
-  const [message, setMessage] = useState("Loading your workspace...");
+  const [message, setMessage] = useState("Loading the admin workspace...");
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
     let active = true;
 
-    async function loadHome() {
+    async function loadAdmin() {
       try {
         const [homeData, meData] = await Promise.all([
-          getHome(token),
+          getAdminHome(token),
           getMe(token),
         ]);
         if (active) {
-          setMessage(typeof homeData === "string" ? homeData : "Welcome Home");
+          setMessage(typeof homeData === "string" ? homeData : "Welcome Admin");
           setProfile(meData);
         }
       } catch (err) {
         if (active) {
-          setError(err.message || "Could not load home");
+          setError(err.message || "Could not load admin home");
         }
       }
     }
 
-    loadHome();
+    loadAdmin();
     return () => {
       active = false;
     };
@@ -42,8 +42,8 @@ export default function HomePage() {
   }
 
   return (
-    <div className="home-page">
-      <div className="home-backdrop" aria-hidden="true" />
+    <div className="home-page admin-page">
+      <div className="home-backdrop admin-backdrop" aria-hidden="true" />
       <header className="home-top">
         <p className="brand-mark">Vaultline</p>
         <button className="btn-ghost" type="button" onClick={handleLogout}>
@@ -52,10 +52,10 @@ export default function HomePage() {
       </header>
 
       <main className="home-main">
-        <p className="eyebrow">User home</p>
+        <p className="eyebrow">Admin only</p>
         <h1>{message}</h1>
         <p className="home-copy">
-          This is the standard user workspace.
+          This workspace is loaded from the admin API.
           {profile ? ` Signed in as ${profile.username}.` : ""}
         </p>
         {profile?.role ? (

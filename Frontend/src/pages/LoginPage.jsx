@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { login } from "../api/authApi.js";
+import { getMe, login } from "../api/authApi.js";
 import { useAuth } from "../auth/AuthContext.jsx";
+import { homePathForRole } from "../auth/roles.js";
 import AuthShell from "../components/AuthShell.jsx";
 
 export default function LoginPage() {
@@ -25,8 +26,16 @@ export default function LoginPage() {
 
     try {
       const data = await login({ email, password });
-      saveAuth(data);
-      navigate("/home", { replace: true });
+      const me = await getMe(data.token);
+      saveAuth({
+        ...data,
+        id: me.id ?? data.id,
+        username: me.username ?? data.username,
+        email: me.email ?? data.email,
+        role: me.role,
+        status: me.status,
+      });
+      navigate(homePathForRole(me.role), { replace: true });
     } catch (err) {
       setError(err.message || "Login failed");
     } finally {

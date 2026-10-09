@@ -55,6 +55,15 @@ export function getHome(token) {
   });
 }
 
+export function getAdminHome(token) {
+  return request("/api/v1/admin/home", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
 export function getMe(token) {
   return request("/api/v1/user/me", {
     method: "GET",

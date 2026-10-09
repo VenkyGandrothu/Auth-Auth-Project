@@ -232,6 +232,13 @@ a:hover {
   animation: drift 18s ease-in-out infinite alternate;
 }
 
+.admin-backdrop {
+  background:
+    linear-gradient(155deg, rgba(28, 18, 12, 0.9), rgba(92, 48, 18, 0.78)),
+    url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1800&q=80")
+      center/cover;
+}
+
 .home-top,
 .home-main {
   position: relative;
